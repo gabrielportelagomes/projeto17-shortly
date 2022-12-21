@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postUrl } from "../controllers/urlsControllers.js";
+import { getUrl, postUrl } from "../controllers/urlsControllers.js";
 import { authValidation } from "../middlewares/authValidation.js";
 import { tokenValidation } from "../middlewares/tokenValidation.js";
 import { urlSchemaValidation } from "../middlewares/urlSchemaValidation.js";
@@ -13,5 +13,6 @@ urlsRouter.post(
   urlSchemaValidation,
   postUrl
 );
+urlsRouter.get("/urls/:id", getUrl);
 
 export default urlsRouter;
