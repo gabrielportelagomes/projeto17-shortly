@@ -25,7 +25,7 @@ export async function postSignIn(req, res) {
   const id = res.locals.userId;
 
   try {
-    const userData = { userId: id, UserEmail: email };
+    const userData = { userId: id, userEmail: email };
     const secretkey = process.env.JWT_SECRET;
     const settings = { expiresIn: 60 * 60 * 24 * 30 };
 
