@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { getUrl, postUrl } from "../controllers/urlsControllers.js";
+import {
+  getRedirectUrl,
+  getUrl,
+  postUrl,
+} from "../controllers/urlsControllers.js";
 import { authValidation } from "../middlewares/authValidation.js";
 import { tokenValidation } from "../middlewares/tokenValidation.js";
 import { urlSchemaValidation } from "../middlewares/urlSchemaValidation.js";
@@ -14,5 +18,6 @@ urlsRouter.post(
   postUrl
 );
 urlsRouter.get("/urls/:id", getUrl);
+urlsRouter.get("/urls/open/:shortUrl", getRedirectUrl);
 
 export default urlsRouter;

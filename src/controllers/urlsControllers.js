@@ -40,3 +40,30 @@ export async function getUrl(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function getRedirectUrl(req, res) {
+  const { shortUrl } = req.params;
+
+  try {
+    const { rows } = await connection.query(
+      `SELECT url FROM urls WHERE "shortUrl"=$1;`,
+      [shortUrl]
+    );
+
+    if (rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    await connection.query(
+      `UPDATE urls SET "visitCount"="visitCount"+1 WHERE "shortUrl"=$1;`,
+      [shortUrl]
+    );
+
+    const url = rows[0].url;
+
+    res.redirect(url);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
