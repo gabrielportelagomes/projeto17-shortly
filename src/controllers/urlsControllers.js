@@ -67,3 +67,17 @@ export async function getRedirectUrl(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function deleteUrl(req, res) {
+  const url = res.locals.url;
+  const urlId = url.id;
+
+  try {
+    await connection.query(`DELETE FROM urls WHERE id=$1;`, [urlId]);
+
+    res.sendStatus(204);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
