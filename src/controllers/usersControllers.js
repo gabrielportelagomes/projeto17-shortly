@@ -31,7 +31,7 @@ export async function postSignIn(req, res) {
 
     const token = jwt.sign(userData, secretkey, settings);
 
-    res.status(201).send({ token });
+    res.status(200).send({ token });
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
