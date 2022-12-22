@@ -2,8 +2,7 @@ import { selectUrlByIdAndUserId } from "../repository/urlsRepositories.js";
 
 export async function urlOwnerValidation(req, res, next) {
   const { id } = req.params;
-  const user = res.locals.user;
-  const userId = user.id;
+  const { userId } = req.user;
 
   try {
     const { rows } = await selectUrlByIdAndUserId(id, userId);

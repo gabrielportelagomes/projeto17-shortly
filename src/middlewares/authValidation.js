@@ -11,27 +11,24 @@ export async function authValidation(req, res, next) {
   }
 
   try {
-    const userData = jwt.verify(token, secretkey);
+    jwt.verify(token, secretkey, async (error, decoded) => {
+      if (error) {
+        return res.sendStatus(401);
+      }
+      const { userId, userEmail } = decoded;
 
-    if (!userData) {
-      return res.sendStatus(401);
-    }
+      const userExists = await selectUserByIdAndEmail(userId, userEmail);
 
-    const { userId, userEmail } = userData;
+      if (userExists.rows.length === 0) {
+        return res.sendStatus(401);
+      }
 
-    const userExists = await selectUserByIdAndEmail(userId, userEmail);
+      req.user = { userId, userEmail };
 
-    if (userExists.rows.length === 0) {
-      return res.sendStatus(401);
-    }
-
-    const user = userExists.rows[0];
-
-    res.locals.user = user;
+      return next();
+    });
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
   }
-
-  next();
 }

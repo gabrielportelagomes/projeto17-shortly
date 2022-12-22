@@ -40,8 +40,7 @@ export async function postSignIn(req, res) {
 }
 
 export async function getUserInfos(req, res) {
-  const user = res.locals.user;
-  const userId = user.id;
+  const { userId } = req.user;
 
   try {
     const { rows } = await selectUserInfos(userId);

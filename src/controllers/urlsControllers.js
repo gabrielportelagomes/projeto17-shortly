@@ -8,13 +8,12 @@ import {
 
 export async function postUrl(req, res) {
   const url = res.locals.url;
-  const user = res.locals.user;
-  const id = user.id;
+  const { userId } = req.user;
 
   const shortUrl = nanoid(6);
 
   try {
-    await insertUrl(id, url, shortUrl);
+    await insertUrl(userId, url, shortUrl);
 
     res.status(201).send({ shortUrl });
   } catch (err) {
