@@ -1,13 +1,11 @@
-import connection from "../database/db.js";
 import bcrypt from "bcrypt";
+import { selectUserByEmail } from "../repository/usersRepositories.js";
 
 export async function signInValidation(req, res, next) {
   const { email, password } = res.locals.login;
 
   try {
-    const user = await connection.query(`SELECT * FROM users WHERE email=$1;`, [
-      email,
-    ]);
+    const user = await selectUserByEmail(email);
 
     if (user.rows.length === 0) {
       return res.sendStatus(401);

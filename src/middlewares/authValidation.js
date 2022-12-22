@@ -1,13 +1,10 @@
-import connection from "../database/db.js";
+import { selectUserByIdAndEmail } from "../repository/usersRepositories.js";
 
 export async function authValidation(req, res, next) {
   const { userId, userEmail } = res.locals.userData;
 
   try {
-    const userExists = await connection.query(
-      `SELECT id FROM users WHERE id=$1 AND email=$2;`,
-      [userId, userEmail]
-    );
+    const userExists = await selectUserByIdAndEmail(userId, userEmail);
 
     if (userExists.rows.length === 0) {
       return res.sendStatus(401);

@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
-import connection from "../database/db.js";
 import jwt from "jsonwebtoken";
+import {
+  insertUser,
+  selectRanking,
+  selectUserInfos,
+} from "../repository/usersRepositories.js";
 
 export async function postSignUp(req, res) {
   const { name, email, password } = res.locals.user;
@@ -8,10 +12,7 @@ export async function postSignUp(req, res) {
   try {
     const hashPassword = bcrypt.hashSync(password, 12);
 
-    await connection.query(
-      `INSERT INTO users (name, email, password) VALUES ($1, $2, $3);`,
-      [name, email, hashPassword]
-    );
+    await insertUser(name, email, hashPassword);
 
     res.sendStatus(201);
   } catch (err) {
@@ -43,14 +44,7 @@ export async function getUserInfos(req, res) {
   const userId = user.id;
 
   try {
-    const { rows } = await connection.query(
-      `SELECT users.id, users.name, SUM(urls."visitCount") AS "visitCount", 
-      JSON_AGG(JSON_BUILD_OBJECT('id', urls.id, 'shortUrl', urls."shortUrl", 'url', urls.url, 'visitCount', urls."visitCount")) AS "shortenedUrls" 
-      FROM users 
-      JOIN urls ON urls."userId"=users.id 
-      WHERE users.id=$1 GROUP BY users.id;`,
-      [userId]
-    );
+    const { rows } = await selectUserInfos(userId);
 
     res.status(200).send(rows[0]);
   } catch (err) {
@@ -61,12 +55,7 @@ export async function getUserInfos(req, res) {
 
 export async function getRanking(req, res) {
   try {
-    const { rows } = await connection.query(
-      `SELECT users.id, users.name, COUNT(urls."shortUrl") AS "linksCount", SUM(COALESCE(urls."visitCount", 0)) AS "visitCount" 
-      FROM users
-      LEFT JOIN urls ON urls."userId"=users.id 
-      GROUP BY users.id ORDER BY "visitCount" DESC LIMIT 10`
-    );
+    const { rows } = await selectRanking();
 
     res.status(200).send(rows);
   } catch (err) {

@@ -1,4 +1,4 @@
-import connection from "../database/db.js";
+import { selectUserByEmail } from "../repository/usersRepositories.js";
 
 export async function signUpValidation(req, res, next) {
   const { email, password, confirmPassword } = res.locals.user;
@@ -8,10 +8,7 @@ export async function signUpValidation(req, res, next) {
       return res.status(400).send({ message: "Senhas divergentes!" });
     }
 
-    const emailExists = await connection.query(
-      `SELECT * FROM users WHERE email=$1;`,
-      [email]
-    );
+    const emailExists = await selectUserByEmail(email);
 
     if (emailExists.rows.length > 0) {
       return res.sendStatus(409);
