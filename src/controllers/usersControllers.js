@@ -37,3 +37,24 @@ export async function postSignIn(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function getUserInfos(req, res) {
+  const user = res.locals.user;
+  const userId = user.id;
+
+  try {
+    const { rows } = await connection.query(
+      `SELECT users.id, users.name, SUM(urls."visitCount") AS "visitCount", 
+      JSON_AGG(JSON_BUILD_OBJECT('id', urls.id, 'shortUrl', urls."shortUrl", 'url', urls.url, 'visitCount', urls."visitCount")) AS "shortenedUrls" 
+      FROM users 
+      JOIN urls ON urls."userId"=users.id 
+      WHERE users.id=$1 GROUP BY users.id;`,
+      [userId]
+    );
+
+    res.status(200).send(rows[0]);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
