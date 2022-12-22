@@ -7,7 +7,7 @@ import {
 } from "../repository/usersRepositories.js";
 
 export async function postSignUp(req, res) {
-  const { name, email, password } = res.locals.user;
+  const { name, email, password } = res.locals.signUp;
 
   try {
     const hashPassword = bcrypt.hashSync(password, 12);
@@ -22,7 +22,7 @@ export async function postSignUp(req, res) {
 }
 
 export async function postSignIn(req, res) {
-  const { email } = res.locals.login;
+  const { email } = res.locals.signIn;
   const id = res.locals.userId;
 
   try {

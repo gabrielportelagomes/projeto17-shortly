@@ -6,18 +6,23 @@ import {
   postSignUp,
 } from "../controllers/usersControllers.js";
 import { authValidation } from "../middlewares/authValidation.js";
-import { signInSchemaValidation } from "../middlewares/signInSchemaValidation.js";
+import { validate } from "../middlewares/schemaValidation.js";
 import { signInValidation } from "../middlewares/signInValidation.js";
 import { signUpValidation } from "../middlewares/signUpValidation.js";
-
-import { userSchemaValidation } from "../middlewares/userSchemaValidation.js";
+import { signInSchema } from "../schemas/signInSchema.js";
+import { userSchema } from "../schemas/userSchema.js";
 
 const usersRouter = Router();
 
-usersRouter.post("/signup", userSchemaValidation, signUpValidation, postSignUp);
+usersRouter.post(
+  "/signup",
+  validate(userSchema, "signUp"),
+  signUpValidation,
+  postSignUp
+);
 usersRouter.post(
   "/signin",
-  signInSchemaValidation,
+  validate(signInSchema, "signIn"),
   signInValidation,
   postSignIn
 );

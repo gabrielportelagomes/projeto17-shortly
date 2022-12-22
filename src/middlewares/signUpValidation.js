@@ -1,7 +1,7 @@
 import { selectUserByEmail } from "../repository/usersRepositories.js";
 
 export async function signUpValidation(req, res, next) {
-  const { email, password, confirmPassword } = res.locals.user;
+  const { email, password, confirmPassword } = res.locals.signUp;
 
   try {
     if (password !== confirmPassword) {

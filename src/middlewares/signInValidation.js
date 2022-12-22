@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { selectUserByEmail } from "../repository/usersRepositories.js";
 
 export async function signInValidation(req, res, next) {
-  const { email, password } = res.locals.login;
+  const { email, password } = res.locals.signIn;
 
   try {
     const user = await selectUserByEmail(email);

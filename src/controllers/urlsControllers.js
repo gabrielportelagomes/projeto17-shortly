@@ -7,7 +7,8 @@ import {
 } from "../repository/urlsRepositories.js";
 
 export async function postUrl(req, res) {
-  const url = res.locals.url;
+  const { url } = res.locals.url;
+
   const { userId } = req.user;
 
   const shortUrl = nanoid(6);
