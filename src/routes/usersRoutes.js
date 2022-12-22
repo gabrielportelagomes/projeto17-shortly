@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getRanking,
   getUserInfos,
   postSignIn,
   postSignUp,
@@ -21,5 +22,6 @@ usersRouter.post(
   postSignIn
 );
 usersRouter.get("/users/me", tokenValidation, authValidation, getUserInfos);
+usersRouter.get("/ranking", getRanking);
 
 export default usersRouter;
