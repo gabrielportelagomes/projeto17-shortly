@@ -26,7 +26,7 @@ export function updateVisitCount(shortUrl) {
   );
 }
 
-export function deleteUrl(urlId) {
+export function deleteUrlById(urlId) {
   return connection.query(`DELETE FROM urls WHERE id=$1;`, [urlId]);
 }
 

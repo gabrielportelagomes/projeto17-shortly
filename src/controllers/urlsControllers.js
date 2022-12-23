@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import {
+  deleteUrlById,
   insertUrl,
   selectUrl,
   selectUrlInfos,
@@ -66,7 +67,7 @@ export async function deleteUrl(req, res) {
   const urlId = url.id;
 
   try {
-    await deleteUrl(urlId);
+    await deleteUrlById(urlId);
 
     res.sendStatus(204);
   } catch (err) {
