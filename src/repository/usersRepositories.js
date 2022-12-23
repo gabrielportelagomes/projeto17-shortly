@@ -9,10 +9,12 @@ export function insertUser(name, email, hashPassword) {
 
 export function selectUserInfos(userId) {
   return connection.query(
-    `SELECT users.id, users.name, SUM(urls."visitCount") AS "visitCount", 
-          JSON_AGG(JSON_BUILD_OBJECT('id', urls.id, 'shortUrl', urls."shortUrl", 'url', urls.url, 'visitCount', urls."visitCount")) AS "shortenedUrls" 
+    `WITH url_table AS (SELECT urls.id AS "id", urls."shortUrl", urls.url, urls."visitCount" FROM urls WHERE urls."userId"=$1)
+    SELECT users.id, users.name, SUM(COALESCE(urls."visitCount", 0)) AS "visitCount", 
+    COALESCE(NULLIF(JSON_AGG(url_table.*)::TEXT, '[null]'), '[]'):: JSON AS "shortenedUrls" 
           FROM users 
-          JOIN urls ON urls."userId"=users.id 
+          LEFT JOIN urls ON urls."userId"=users.id 
+          LEFT JOIN url_table ON urls.id=url_table.id
           WHERE users.id=$1 GROUP BY users.id;`,
     [userId]
   );
