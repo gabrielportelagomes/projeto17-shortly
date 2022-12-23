@@ -55,7 +55,7 @@ export async function getRedirectUrl(req, res) {
 
     const url = rows[0].url;
 
-    res.redirect(url);
+    return res.redirect(url);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
